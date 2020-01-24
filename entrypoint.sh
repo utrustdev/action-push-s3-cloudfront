@@ -10,7 +10,7 @@ mkdir -p $HOME/.aws
 echo "$aws_credentials" > $HOME/.aws/credentials
 
 echo "Syncing $from with $to"
-aws s3 sync $from $to -no-progress --profile $aws_role
+aws s3 sync $from $to --no-progress --profile $aws_role
 
 echo "Invalidating cloudfront distribution"
 aws cloudfront create-invalidation --distribution-id $cloudfront_distribution_id --paths "/*" --profile $aws_role
