@@ -1,0 +1,29 @@
+name: Deploy to an S3-backed Cloudfront
+description: Pushes assets to an S3 bucket, and updates a Cloudfront distribution
+
+inputs:
+  from:
+    description: 'Local directory to sync with the bucket'
+    required: true
+  to:
+    description: 'Bucket and path to sync with'
+    required: true
+  cloudfront-distribution-id:
+    description: 'Cloudfront ID to update after the sync is done'
+    required: true
+  aws_credentials:
+    description: 'Content for ~/.aws/credentials'
+    required: true
+  aws_role:
+    description: 'AWS role from aws credentials to use in all AWS calls'
+    required: true
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.from }}
+    - ${{ inputs.to }}
+    - ${{ inputs.cloudfront-distribution-id }}
+    - '${{ inputs.aws_credentials }}'
+    - ${{ inputs.aws_role }}
