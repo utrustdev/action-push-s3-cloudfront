@@ -3,11 +3,11 @@
 from=$1
 to=$2
 cloudfront_distribution_id=$3
-aws_credentials=$4
+aws_credentials="$4"
 aws_role=$5
 
 mkdir -p $HOME/.aws
-echo "$aws_credentials" > $HOME/.aws/credentials
+echo -e "$aws_credentials" > $HOME/.aws/credentials
 
 echo "Syncing $from with $to"
 aws s3 sync $from $to --no-progress --profile $aws_role
