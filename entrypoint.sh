@@ -9,8 +9,6 @@ aws_role=$5
 mkdir -p $HOME/.aws
 echo -e "$aws_credentials" > $HOME/.aws/config
 
-cat $HOME/.aws/config
-
 echo "Syncing $from with $to"
 aws s3 sync $from $to --no-progress --profile $aws_role
 
