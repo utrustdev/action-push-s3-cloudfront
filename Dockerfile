@@ -1,6 +1,4 @@
-FROM python:3.7-alpine
-
-RUN pip install --quiet awscli==1.16.265
+FROM amazon/aws-cli:2.10.0
 
 COPY entrypoint.sh entrypoint.sh
 

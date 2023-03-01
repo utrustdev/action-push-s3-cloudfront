@@ -5,7 +5,7 @@ distribution
 
 ## Usage
 
-```
+```yaml
 jobs:
   deploy:
     steps:
@@ -15,13 +15,5 @@ jobs:
           from: build/
           to: s3://bucket-name/path
           cloudfront-distribution-id: XXXXXX
-          aws_role: development
-          aws_credentials: |
-            [default]
-            aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}
-            aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            [profile development]
-            role_arn = arn:aws:iam::1234567890:role/ci
-            region = eu-central-1
-            source_profile = default
+
 ```
