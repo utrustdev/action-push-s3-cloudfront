@@ -3,27 +3,38 @@ description: Pushes assets to an S3 bucket, and updates a Cloudfront distributio
 
 inputs:
   from:
-    description: 'Local directory to sync with the bucket'
+    description: "Local directory to sync with the bucket"
     required: true
   to:
-    description: 'Bucket and path to sync with'
+    description: "Bucket and path to sync with"
     required: true
   cloudfront-distribution-id:
-    description: 'Cloudfront ID to update after the sync is done'
-    required: true
-  aws_credentials:
-    description: 'Content for ~/.aws/credentials'
+    description: "Cloudfront ID to update after the sync is done"
     required: true
   aws_role:
-    description: 'AWS role from aws credentials to use in all AWS calls'
+    description: "AWS role from aws credentials to use in all AWS calls"
     required: true
+  aws_region:
+    description: "AWS region to use"
+    required: false
+    default: "eu-central-1"
+  role-duration-seconds:
+    description: "Role duration in seconds (default: 1 hour)"
+    required: false
+    default: "3600"
 
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
-  args:
-    - ${{ inputs.from }}
-    - ${{ inputs.to }}
-    - ${{ inputs.cloudfront-distribution-id }}
-    - '${{ inputs.aws_credentials }}'
-    - ${{ inputs.aws_role }}
+  using: composite
+  steps:
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1-node16
+      with:
+        role-to-assume: ${{ inputs.aws_role }}
+        aws-region: ${{ inputs.aws_region }}
+        role-duration-seconds: ${{ inputs.role-duration-seconds }}
+        role-skip-session-tagging: true
+
+    - name: Push to S3 bucket and invalidate Cloudfront distribution
+      run: |
+        ${{ github.action_path }}/update_cloudfront_distribution.sh ${{ inputs.from }} ${{ inputs.to }} ${{ inputs.cloudfront-distribution-id}}
+      shell: bash
